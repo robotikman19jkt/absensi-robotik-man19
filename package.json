@@ -1,0 +1,28 @@
+{
+  "name": "absensi-robotik-man19",
+  "version": "1.0.0",
+  "description": "Aplikasi Web Absensi Full-Stack Berbasis Geofencing GPS & Token untuk Ekstrakurikuler Robotik MAN 19 Jakarta",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "absensi",
+    "robotik",
+    "man-19-jakarta",
+    "geofencing",
+    "haversine",
+    "express",
+    "postgresql",
+    "vercel"
+  ],
+  "author": "Ekstrakurikuler Robotik MAN 19 Jakarta",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
+  }
+}

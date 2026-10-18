@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi Ekstrakurikuler Robotik - MAN 19 Jakarta</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              dark: '#070d1e',
+              panel: '#0f172a',
+              blue: '#0066ff',
+              cyan: '#00f0ff',
+              indigo: '#4f46e5',
+              glow: '#38bdf8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/css/custom.css">
+</head>
+<body class="bg-tech-grid min-h-screen flex flex-col justify-between relative selection:bg-cyan-500 selection:text-black">
+
+  <!-- Ambient Light Orbs -->
+  <div class="glow-orb-blue w-96 h-96 -top-20 -left-20"></div>
+  <div class="glow-orb-cyan w-96 h-96 top-1/2 -right-20"></div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="w-full border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shadow-lg shadow-cyan-500/20">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <i data-lucide="bot" class="w-5 h-5 text-cyan-400"></i>
+          </div>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold text-white tracking-wide flex items-center gap-1.5">
+            ROBOTIK <span class="text-cyan-400">MAN 19</span>
+          </h1>
+          <p class="text-xs text-slate-400">Presensi Berbasis Geofencing GPS</p>
+        </div>
+      </div>
+
+      <a href="/admin" class="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/60 hover:bg-slate-700/80 text-slate-300 hover:text-white transition">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyan-400"></i>
+        <span>Panel Admin</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow flex items-center justify-center p-4 sm:p-6 z-10">
+    <div class="w-full max-w-lg">
+      
+      <!-- Card Banner Robotik -->
+      <div class="glass-panel rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        
+        <!-- Top Accent Border -->
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-cyan-400 to-indigo-500"></div>
+
+        <!-- Title & Subtitle -->
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/70 border border-cyan-500/30 text-cyan-400 text-xs font-medium mb-3">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            <span>Radius Toleransi: 100 Meter</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Formulir Presensi
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">
+            Ekstrakurikuler Robotik Madrasah Aliyah Negeri 19 Jakarta
+          </p>
+        </div>
+
+        <!-- Info Lokasi Pusat MAN 19 -->
+        <div class="mb-6 p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-3">
+          <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400 shrink-0 mt-0.5">
+            <i data-lucide="map-pin" class="w-4 h-4"></i>
+          </div>
+          <div class="text-xs text-slate-300">
+            <span class="font-semibold text-white block mb-0.5">Titik Lokasi: MAN 19 Jakarta</span>
+            Pastikan Anda sudah berada di area madrasah dan mengaktifkan izin GPS akurasi tinggi pada perangkat Anda.
+          </div>
+        </div>
+
+        <!-- Form Absensi Siswa -->
+        <form id="attendanceForm" class="space-y-4">
+          
+          <!-- Input 1: Nama Lengkap -->
+          <div>
+            <label for="nama" class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
+              Nama Lengkap Siswa
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                <i data-lucide="user" class="w-4 h-4"></i>
+              </span>
+              <input 
+                type="text" 
+                id="nama" 
+                name="nama" 
+                required 
+                autocomplete="name"
+                placeholder="Contoh: Muhammad Farhan"
+                class="glass-input w-full pl-10 pr-4 py-3 rounded-xl text-sm text-white placeholder-slate-500"
+              >
+            </div>
+          </div>
+
+          <!-- Input 2: Pilihan Kelas -->
+          <div>
+            <label for="kelas" class="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
+              Kelas Siswa
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                <i data-lucide="school" class="w-4 h-4"></i>
+              </span>
+              <select 
+                id="kelas" 
+                name="kelas" 
+                required 
+                class="glass-input w-full pl-10 pr-10 py-3 rounded-xl text-sm text-white bg-slate-900 appearance-none cursor-pointer"
+              >
+                <option value="" disabled selected>-- Pilih Kelas Anda --</option>
+                
+                <optgroup label="Kelas X" class="bg-slate-900 text-cyan-300 font-semibold">
+                  <option value="X-A" class="text-white">X-A</option>
+                  <option value="X-B" class="text-white">X-B</option>
+                  <option value="X-C" class="text-white">X-C</option>
+                  <option value="X-D" class="text-white">X-D</option>
+                  <option value="X-E" class="text-white">X-E</option>
+                  <option value="X-F" class="text-white">X-F</option>
+                  <option value="X-G" class="text-white">X-G</option>
+                  <option value="X-H" class="text-white">X-H</option>
+                </optgroup>
+
+                <optgroup label="Kelas XI" class="bg-slate-900 text-blue-300 font-semibold">
+                  <option value="XI-A" class="text-white">XI-A</option>
+                  <option value="XI-B" class="text-white">XI-B</option>
+                  <option value="XI-C" class="text-white">XI-C</option>
+                  <option value="XI-D" class="text-white">XI-D</option>
+                  <option value="XI-E" class="text-white">XI-E</option>
+                  <option value="XI-F" class="text-white">XI-F</option>
+                  <option value="XI-G" class="text-white">XI-G</option>
+                  <option value="XI-H" class="text-white">XI-H</option>
+                </optgroup>
+              </select>
+              <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Input 3: Token Absensi Sesi -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="token" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Kode Token Sesi
+              </label>
+              <span class="text-[11px] text-cyan-400 flex items-center gap-1 font-mono">
+                <i data-lucide="clock" class="w-3 h-3"></i> Berlaku 30 Menit
+              </span>
+            </div>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                <i data-lucide="key-round" class="w-4 h-4"></i>
+              </span>
+              <input 
+                type="text" 
+                id="token" 
+                name="token" 
+                required 
+                maxlength="20"
+                placeholder="Contoh: RBK-8924"
+                style="text-transform: uppercase;"
+                class="glass-input font-mono font-bold tracking-widest w-full pl-10 pr-4 py-3 rounded-xl text-sm text-cyan-300 placeholder-slate-500 uppercase"
+              >
+            </div>
+          </div>
+
+          <!-- GPS Status Live Preview Indicator -->
+          <div id="gpsStatusCard" class="py-2.5 px-3.5 rounded-xl bg-slate-900/60 border border-slate-800 text-xs flex items-center justify-between transition-all">
+            <div class="flex items-center gap-2.5">
+              <span id="gpsIndicatorDot" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <span id="gpsStatusText" class="text-slate-300">Menunggu verifikasi GPS perangkat...</span>
+            </div>
+            <button 
+              type="button" 
+              id="btnTestGps" 
+              class="text-[11px] text-cyan-400 hover:text-cyan-300 underline underline-offset-2 flex items-center gap-1"
+            >
+              <i data-lucide="locate-fixed" class="w-3 h-3"></i> Tes GPS
+            </button>
+          </div>
+
+          <!-- Opsi Simulasi Lokasi untuk Testing Lokal -->
+          <div class="p-2.5 rounded-xl bg-blue-950/30 border border-blue-500/20 text-xs flex items-center justify-between">
+            <label for="mockLocationToggle" class="flex items-center gap-2 cursor-pointer text-slate-300 select-none">
+              <input type="checkbox" id="mockLocationToggle" class="w-4 h-4 rounded text-cyan-500 bg-slate-900 border-slate-700 focus:ring-cyan-500 cursor-pointer">
+              <span class="text-[11px] text-slate-300">
+                <strong class="text-cyan-400">Mode Uji Coba:</strong> Simulasi berada di MAN 19
+              </span>
+            </label>
+            <span class="text-[10px] text-slate-500 font-mono">Radius 0m</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit" 
+            id="btnSubmit" 
+            class="w-full mt-2 py-3.5 px-6 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 shadow-lg shadow-cyan-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <i data-lucide="send" id="btnIcon" class="w-4 h-4"></i>
+            <span id="btnText">Kirim Presensi Sekarang</span>
+          </button>
+        </form>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal Feedback (Sukses / Gagal) -->
+  <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+    <div class="w-full max-w-md glass-panel rounded-2xl p-6 sm:p-7 border relative shadow-2xl transform scale-95 transition-transform duration-300" id="modalCard">
+      
+      <!-- Close Button -->
+      <button id="modalCloseBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Modal Icon -->
+      <div id="modalIconContainer" class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center">
+        <!-- Icon inserted by JS -->
+      </div>
+
+      <!-- Modal Title & Message -->
+      <div class="text-center">
+        <h3 id="modalTitle" class="text-xl font-extrabold text-white mb-2"></h3>
+        <p id="modalMessage" class="text-sm text-slate-300 mb-6 leading-relaxed"></p>
+      </div>
+
+      <!-- Detail Box (Khusus Sukses) -->
+      <div id="modalDetails" class="hidden space-y-2 mb-6 p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+        <div class="flex justify-between pb-1.5 border-b border-slate-800">
+          <span class="text-slate-400">Nama Siswa:</span>
+          <span id="resNama" class="text-white font-medium"></span>
+        </div>
+        <div class="flex justify-between pb-1.5 border-b border-slate-800">
+          <span class="text-slate-400">Kelas:</span>
+          <span id="resKelas" class="text-cyan-400 font-bold"></span>
+        </div>
+        <div class="flex justify-between pb-1.5 border-b border-slate-800">
+          <span class="text-slate-400">Jarak dari Titik Pusat:</span>
+          <span id="resJarak" class="text-emerald-400 font-semibold font-mono"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Waktu Terverifikasi:</span>
+          <span id="resWaktu" class="text-slate-300 font-mono"></span>
+        </div>
+      </div>
+
+      <!-- Action Button inside modal -->
+      <button id="modalConfirmBtn" class="w-full py-3 rounded-xl font-semibold text-white bg-slate-800 hover:bg-slate-700 transition">
+        Tutup
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-slate-800/60 py-4 text-center text-xs text-slate-500 z-10">
+    <div class="max-w-4xl mx-auto px-4">
+      <p>&copy; 2026 Ekstrakurikuler Robotik MAN 19 Jakarta. Sistem Absensi Geofencing GPS.</p>
+    </div>
+  </footer>
+
+  <!-- Frontend Logic -->
+  <script src="/js/app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+/* Custom Styling untuk Absensi Robotik MAN 19 Jakarta */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #070d1e;
+  color: #f1f5f9;
+  overflow-x: hidden;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Background Cyber Grid */
+.bg-tech-grid {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+}
+
+/* Glowing Ambient Orbs */
+.glow-orb-blue {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(0, 162, 255, 0.25) 0%, rgba(59, 130, 246, 0.05) 70%, transparent 100%);
+}
+
+.glow-orb-cyan {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, rgba(99, 102, 241, 0.05) 70%, transparent 100%);
+}
+
+/* Glassmorphism Cards */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 10px 40px -10px rgba(0, 240, 255, 0.25);
+}
+
+.glass-input {
+  background: rgba(11, 20, 38, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  transition: all 0.2s ease-in-out;
+}
+
+.glass-input:focus {
+  border-color: #00f0ff;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
+  outline: none;
+}
+
+/* Pulse Radar Effect */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 14px rgba(0, 240, 255, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 240, 255, 0);
+  }
+}
+
+.radar-active {
+  animation: radar-pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b132b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e3a8a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}

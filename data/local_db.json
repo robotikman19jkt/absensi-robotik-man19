@@ -1,0 +1,47 @@
+{
+  "tokens": [
+    {
+      "id": 1,
+      "code": "RBK-DEMO",
+      "created_at": "2026-10-18T08:42:10.047Z",
+      "expires_at": "2026-10-18T09:12:10.047Z",
+      "is_active": false
+    },
+    {
+      "id": 2,
+      "code": "RBK-U3V2",
+      "created_at": "2026-10-18T08:47:59.572Z",
+      "expires_at": "2026-10-18T09:17:59.572Z",
+      "is_active": false
+    },
+    {
+      "id": 3,
+      "code": "RBK-RQC2",
+      "created_at": "2026-10-18T08:48:00.863Z",
+      "expires_at": "2026-10-18T09:18:00.863Z",
+      "is_active": true
+    }
+  ],
+  "absensi": [
+    {
+      "id": 1,
+      "nama": "Hafizh Naazmi",
+      "kelas": "XI-A",
+      "token_used": "RBK-DEMO",
+      "user_lat": -6.250529,
+      "user_lon": 106.757041,
+      "distance_meters": 0,
+      "created_at": "2026-10-18T08:45:20.111Z"
+    },
+    {
+      "id": 2,
+      "nama": "jjj",
+      "kelas": "X-B",
+      "token_used": "RBK-RQC2",
+      "user_lat": -6.250529,
+      "user_lon": 106.757041,
+      "distance_meters": 0,
+      "created_at": "2026-10-18T08:48:23.382Z"
+    }
+  ]
+}
