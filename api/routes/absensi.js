@@ -4,10 +4,10 @@ const db = require('../config/db');
 const { calculateDistanceMeters } = require('../utils/haversine');
 const { formatWIB } = require('../utils/token');
 
-// Koordinat default MAN 19 Jakarta
-const DEFAULT_CENTER_LAT = -6.250529;
-const DEFAULT_CENTER_LON = 106.757041;
-const DEFAULT_MAX_RADIUS = 100; // 100 meter
+// Koordinat resmi titik pusat MAN 19 Jakarta (Petukangan Utara, Pesanggrahan)
+const DEFAULT_CENTER_LAT = -6.230700;
+const DEFAULT_CENTER_LON = 106.747600;
+const DEFAULT_MAX_RADIUS = 150; // 150 meter (toleransi aman untuk seluruh area gedung & lab robotik)
 
 // Daftar kelas resmi yang diperbolehkan
 const VALID_CLASSES = [
