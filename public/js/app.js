@@ -72,23 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Listener untuk switch Mode Uji Coba MAN 19
-  const mockLocationToggle = document.getElementById('mockLocationToggle');
-  if (mockLocationToggle) {
-    mockLocationToggle.addEventListener('change', (e) => {
-      if (e.target.checked) {
-        updateGpsUI('ready', 'Simulasi MAN 19 Aktif (Lat: -6.250529, Lon: 106.757041)', 'bg-cyan-400');
-      } else {
-        if (cachedPosition) {
-          const acc = Math.round(cachedPosition.coords.accuracy);
-          updateGpsUI('ready', `GPS Terkunci (Akurasi: ±${acc}m)`, 'bg-emerald-400');
-        } else {
-          updateGpsUI('idle', 'Menunggu verifikasi GPS perangkat...', 'bg-amber-400');
-        }
-      }
-    });
-  }
-
   /**
    * Handle Error Geolocation
    */
@@ -191,38 +174,28 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const mockLocationToggle = document.getElementById('mockLocationToggle');
-    const isMock = mockLocationToggle && mockLocationToggle.checked;
+    setFormLoading(true, 'Mengunci Posisi GPS...');
+    updateGpsUI('loading', 'Mendeteksi koordinat terkini...', 'bg-cyan-400 animate-pulse');
 
-    let user_lat, user_lon;
-
-    if (isMock) {
-      // Koordinat resmi titik pusat MAN 19 Jakarta
-      user_lat = -6.250529;
-      user_lon = 106.757041;
-      updateGpsUI('ready', 'Simulasi MAN 19 Aktif (0 meter)', 'bg-cyan-400');
-    } else {
-      setFormLoading(true, 'Mengunci Posisi GPS...');
-      updateGpsUI('loading', 'Mendeteksi koordinat terkini...', 'bg-cyan-400 animate-pulse');
-
-      try {
-        const position = await getCurrentGPSPosition();
-        cachedPosition = position;
-        const acc = Math.round(position.coords.accuracy);
-        updateGpsUI('ready', `GPS Terkunci (Akurasi: ±${acc}m)`, 'bg-emerald-400');
-        user_lat = position.coords.latitude;
-        user_lon = position.coords.longitude;
-      } catch (geoErr) {
-        setFormLoading(false);
-        const errMsg = handleGeoError(geoErr);
-        showModal({
-          type: 'error',
-          title: 'Akses GPS Gagal',
-          message: `${errMsg} (Tip: Centang "Mode Uji Coba" di atas jika ingin mengetes dari rumah/laptop).`
-        });
-        return;
-      }
+    let position;
+    try {
+      position = await getCurrentGPSPosition();
+      cachedPosition = position;
+      const acc = Math.round(position.coords.accuracy);
+      updateGpsUI('ready', `GPS Terkunci (Akurasi: ±${acc}m)`, 'bg-emerald-400');
+    } catch (geoErr) {
+      setFormLoading(false);
+      const errMsg = handleGeoError(geoErr);
+      showModal({
+        type: 'error',
+        title: 'Akses GPS Gagal',
+        message: errMsg
+      });
+      return;
     }
+
+    const user_lat = position.coords.latitude;
+    const user_lon = position.coords.longitude;
 
     setFormLoading(true, 'Memverifikasi Presensi...');
 
