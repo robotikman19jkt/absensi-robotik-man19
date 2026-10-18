@@ -108,7 +108,7 @@ router.post('/', async (req, res) => {
         code: 'OUT_OF_BOUNDS',
         distance: distanceMeters,
         maxRadius,
-        message: `Absensi ditolak! Posisi Anda terdeteksi berjarak ${distanceMeters} meter dari MAN 19 Jakarta. Batas maksimal yang diizinkan adalah ${maxRadius} meter.`
+        message: `Absensi ditolak! Posisi Anda terdeteksi berjarak ${distanceMeters} meter dari MAN 19 Jakarta. Anda harus berada di area MAN 19 Jakarta.`
       });
     }
 
