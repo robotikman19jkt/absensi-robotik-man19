@@ -21,7 +21,7 @@ const VALID_CLASSES = [
  */
 router.post('/', async (req, res) => {
   try {
-    let { nama, kelas, token, user_lat, user_lon } = req.body;
+    let { nama, kelas, token, user_lat, user_lon, device_id } = req.body;
 
     // 1. Validasi Keberadaan Input
     if (!nama || !kelas || !token || user_lat === undefined || user_lon === undefined) {
@@ -132,10 +132,31 @@ router.post('/', async (req, res) => {
       });
     }
 
-    // 5. Simpan Data Absensi ke PostgreSQL
+    // 5. Validasi Kunci 1 Perangkat (Anti Titip Absen per Sesi Token)
+    if (device_id && typeof device_id === 'string' && device_id.trim() !== '') {
+      const cleanDeviceId = device_id.trim();
+      const deviceCheckQuery = `
+        SELECT id, nama, kelas, created_at
+        FROM absensi
+        WHERE device_id = $1 AND UPPER(token_used) = $2
+        LIMIT 1
+      `;
+      const deviceResult = await db.query(deviceCheckQuery, [cleanDeviceId, token]);
+
+      if (deviceResult.rows.length > 0) {
+        const prev = deviceResult.rows[0];
+        return res.status(400).json({
+          success: false,
+          code: 'DEVICE_LOCKED',
+          message: `Perangkat (HP) ini sudah digunakan untuk absensi atas nama "${prev.nama}" (${prev.kelas}) pada sesi token ini! Dilarang mengabsenkan siswa lain (Anti Titip Absen).`
+        });
+      }
+    }
+
+    // 6. Simpan Data Absensi ke PostgreSQL
     const insertQuery = `
-      INSERT INTO absensi (nama, kelas, token_used, user_lat, user_lon, distance_meters, created_at)
-      VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP)
+      INSERT INTO absensi (nama, kelas, token_used, user_lat, user_lon, distance_meters, device_id, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)
       RETURNING id, nama, kelas, token_used, distance_meters, created_at
     `;
     const insertResult = await db.query(insertQuery, [
@@ -144,7 +165,8 @@ router.post('/', async (req, res) => {
       token,
       lat,
       lon,
-      distanceMeters
+      distanceMeters,
+      device_id || null
     ]);
 
     const savedRecord = insertResult.rows[0];

@@ -146,7 +146,7 @@ router.get('/rekap', async (req, res) => {
 
     // Ambil daftar absensi
     const query = `
-      SELECT id, nama, kelas, token_used, user_lat, user_lon, distance_meters, created_at
+      SELECT id, nama, kelas, token_used, user_lat, user_lon, distance_meters, device_id, created_at
       FROM absensi
       ${whereClause}
       ORDER BY id DESC
@@ -171,6 +171,7 @@ router.get('/rekap', async (req, res) => {
       kelas: item.kelas,
       token_used: item.token_used,
       distance_meters: parseFloat(item.distance_meters),
+      device_id: item.device_id || '-',
       user_lat: parseFloat(item.user_lat),
       user_lon: parseFloat(item.user_lon),
       created_at_wib: formatWIB(item.created_at),
@@ -201,7 +202,7 @@ router.get('/export', async (req, res) => {
     const { kelas } = req.query;
 
     let query = `
-      SELECT id, nama, kelas, token_used, distance_meters, created_at, user_lat, user_lon
+      SELECT id, nama, kelas, token_used, distance_meters, device_id, created_at, user_lat, user_lon
       FROM absensi
     `;
     let params = [];
@@ -216,7 +217,7 @@ router.get('/export', async (req, res) => {
     const result = await db.query(query, params);
 
     // Buat format CSV dengan pembatas koma atau titik koma yang rapi
-    const headers = ['No', 'Nama Lengkap', 'Kelas', 'Waktu Absen (WIB)', 'Jarak dari MAN 19 (Meter)', 'Kode Token', 'Latitude', 'Longitude'];
+    const headers = ['No', 'Nama Lengkap', 'Kelas', 'Waktu Absen (WIB)', 'Jarak dari MAN 19 (Meter)', 'Kode Token', 'ID Perangkat (Device Lock)', 'Latitude', 'Longitude'];
 
     const escapeCsv = (val) => {
       if (val === null || val === undefined) return '""';
@@ -235,6 +236,7 @@ router.get('/export', async (req, res) => {
         formatWIB(row.created_at),
         `${parseFloat(row.distance_meters)} m`,
         row.token_used,
+        row.device_id || '-',
         row.user_lat,
         row.user_lon
       ];

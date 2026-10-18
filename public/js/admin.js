@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!records || records.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="6" class="text-center py-12 text-slate-500">
+          <td colspan="7" class="text-center py-12 text-slate-500">
             <div class="w-12 h-12 mx-auto mb-2 text-slate-600 flex items-center justify-center">
               <i data-lucide="inbox" class="w-8 h-8"></i>
             </div>
@@ -303,6 +303,11 @@ document.addEventListener('DOMContentLoaded', () => {
           <td class="py-3 px-4">
             <span class="font-mono text-xs text-slate-300 bg-slate-900 px-2 py-1 rounded border border-slate-800">
               ${escapeHtml(item.token_used)}
+            </span>
+          </td>
+          <td class="py-3 px-4">
+            <span class="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30" title="Device ID: ${escapeHtml(item.device_id)}">
+              <i data-lucide="smartphone" class="w-3 h-3"></i> 1 HP / Siswa
             </span>
           </td>
         </tr>

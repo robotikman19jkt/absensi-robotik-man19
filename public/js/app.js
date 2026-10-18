@@ -38,6 +38,49 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /**
+   * Mendapatkan atau membuat ID perangkat unik persisten (Device Fingerprint)
+   */
+  function getOrCreateDeviceId() {
+    let deviceId = localStorage.getItem('man19_robotik_device_id');
+    if (!deviceId) {
+      const traits = `${screen.width}x${screen.height}_${navigator.hardwareConcurrency || 2}`;
+      const randomStr = Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+      deviceId = `DEV_${traits}_${randomStr}`;
+      localStorage.setItem('man19_robotik_device_id', deviceId);
+    }
+    return deviceId;
+  }
+
+  // Real-time listener cek kunci perangkat saat siswa mengetikkan token
+  const tokenInput = document.getElementById('token');
+  const deviceLockWarning = document.getElementById('deviceLockWarning');
+
+  function checkDeviceLockForToken(tokenCode) {
+    if (!tokenCode || !deviceLockWarning) return;
+    const cleanToken = tokenCode.trim().toUpperCase();
+    const attendedJson = localStorage.getItem('man19_attended_' + cleanToken);
+    if (attendedJson) {
+      try {
+        const parsed = JSON.parse(attendedJson);
+        deviceLockWarning.innerHTML = `
+          <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+          <span>Perangkat ini sudah digunakan absen oleh <strong>${parsed.nama}</strong> (${parsed.kelas}) pada sesi token ini.</span>
+        `;
+        deviceLockWarning.classList.remove('hidden');
+        lucide.createIcons();
+      } catch (e) {}
+    } else {
+      deviceLockWarning.classList.add('hidden');
+    }
+  }
+
+  if (tokenInput) {
+    tokenInput.addEventListener('input', (e) => {
+      checkDeviceLockForToken(e.target.value);
+    });
+  }
+
+  /**
    * Helper untuk mendapatkan koordinat GPS melalui Promise
    */
   function getCurrentGPSPosition() {
@@ -174,6 +217,20 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // 1. Validasi Kunci Perangkat di Browser (Anti Titip Absen)
+    const attendedJson = localStorage.getItem('man19_attended_' + token);
+    if (attendedJson) {
+      try {
+        const parsed = JSON.parse(attendedJson);
+        showModal({
+          type: 'error',
+          title: 'Perangkat Terkunci (Anti Titip Absen)',
+          message: `HP ini sudah Anda gunakan untuk absensi atas nama "${parsed.nama}" (${parsed.kelas}) pada sesi token ini! Sistem melarang 1 HP digunakan untuk mengabsenkan siswa lain.`
+        });
+        return;
+      } catch (e) {}
+    }
+
     setFormLoading(true, 'Mengunci Posisi GPS...');
     updateGpsUI('loading', 'Mendeteksi koordinat terkini...', 'bg-cyan-400 animate-pulse');
 
@@ -196,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const user_lat = position.coords.latitude;
     const user_lon = position.coords.longitude;
+    const device_id = getOrCreateDeviceId();
 
     setFormLoading(true, 'Memverifikasi Presensi...');
 
@@ -205,7 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
         kelas,
         token,
         user_lat,
-        user_lon
+        user_lon,
+        device_id
       };
 
       const response = await fetch('/api/absensi', {
@@ -221,6 +280,14 @@ document.addEventListener('DOMContentLoaded', () => {
       setFormLoading(false);
 
       if (response.ok && result.success) {
+        // Kunci perangkat ini di memori HP untuk token sesi ini
+        localStorage.setItem('man19_attended_' + token, JSON.stringify({
+          nama: result.data.nama,
+          kelas: result.data.kelas,
+          waktu: result.data.waktu_wib
+        }));
+        checkDeviceLockForToken(token);
+
         // Tampilkan modal sukses
         showModal({
           type: 'success',
@@ -233,10 +300,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('nama').value = '';
         document.getElementById('kelas').value = '';
       } else {
-        // Tampilkan pesan error spesifik dari backend
+        // Tampilkan pesan error spesifik dari backend (Device Lock, Out of Bounds, Duplicate, Expired)
+        const modalTitle = result.code === 'DEVICE_LOCKED' 
+          ? 'Perangkat Terkunci (Anti Titip Absen)'
+          : (result.code === 'OUT_OF_BOUNDS' ? 'Di Luar Area MAN 19' : 'Presensi Ditolak');
+
         showModal({
           type: 'error',
-          title: result.code === 'OUT_OF_BOUNDS' ? 'Di Luar Area MAN 19' : 'Presensi Ditolak',
+          title: modalTitle,
           message: result.message || 'Terjadi kesalahan saat memproses absensi Anda.'
         });
       }

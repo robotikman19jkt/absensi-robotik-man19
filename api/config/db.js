@@ -55,12 +55,17 @@ async function ensureTablesExist() {
           user_lat NUMERIC(10, 7) NOT NULL,
           user_lon NUMERIC(10, 7) NOT NULL,
           distance_meters NUMERIC(10, 2) NOT NULL,
+          device_id VARCHAR(100),
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
+
+      -- Migrasi otomatis jika tabel sudah ada sebelumnya
+      ALTER TABLE absensi ADD COLUMN IF NOT EXISTS device_id VARCHAR(100);
 
       CREATE INDEX IF NOT EXISTS idx_tokens_code ON tokens(code);
       CREATE INDEX IF NOT EXISTS idx_absensi_token_used ON absensi(token_used);
       CREATE INDEX IF NOT EXISTS idx_absensi_nama_kelas_token ON absensi(LOWER(TRIM(nama)), kelas, token_used);
+      CREATE INDEX IF NOT EXISTS idx_absensi_device_token ON absensi(device_id, token_used);
     `;
     await pool.query(initSql);
     isInitialized = true;

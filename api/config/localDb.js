@@ -133,6 +133,22 @@ async function localQuery(text, params = []) {
     };
   }
 
+  // 6b. SELECT cek kunci perangkat (device_id + token)
+  if (trimmed.includes('FROM absensi') && trimmed.includes('device_id = $1') && trimmed.includes('token_used = $2')) {
+    const devId = params[0] || '';
+    const token = (params[1] || '').trim().toUpperCase();
+
+    const devMatch = db.absensi.find(a =>
+      a.device_id && a.device_id === devId &&
+      a.token_used && a.token_used.toUpperCase() === token
+    );
+
+    return {
+      rows: devMatch ? [{ id: devMatch.id, nama: devMatch.nama, kelas: devMatch.kelas, created_at: devMatch.created_at }] : [],
+      rowCount: devMatch ? 1 : 0
+    };
+  }
+
   // 7. INSERT INTO absensi
   if (trimmed.startsWith('INSERT INTO absensi')) {
     const newId = db.absensi.length > 0 ? Math.max(...db.absensi.map(a => a.id)) + 1 : 1;
@@ -144,6 +160,7 @@ async function localQuery(text, params = []) {
       user_lat: params[3],
       user_lon: params[4],
       distance_meters: params[5],
+      device_id: params[6] || null,
       created_at: new Date().toISOString()
     };
     db.absensi.push(newRecord);
